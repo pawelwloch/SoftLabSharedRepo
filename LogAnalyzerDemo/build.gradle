@@ -1,0 +1,50 @@
+buildscript {
+	ext {
+		springBootVersion = '2.1.0.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("javax.validation:validation-api:2.0.1.Final")
+		classpath("org.glassfish:javax.el:3.0.1-b09")
+		classpath("org.hibernate.validator:hibernate-validator:6.0.13.Final")
+		classpath("org.hibernate.validator:hibernate-validator-annotation-processor:6.0.13.Final")
+	}
+}
+
+plugins {
+    id 'io.franzbecker.gradle-lombok' version '1.14'
+}
+
+apply plugin: 'io.franzbecker.gradle-lombok'
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'org.softlab'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+lombok {
+	version = '1.18.4'
+	sha256 = ""
+}
+
+dependencies {
+	implementation('org.springframework.boot:spring-boot-starter-batch')
+	implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+	implementation('org.springframework.boot:spring-boot-starter-validation')
+	compile('org.hsqldb:hsqldb')
+	compileOnly('org.projectlombok:lombok:1.18.4')
+	compile "org.springframework.boot:spring-boot-configuration-processor"
+	testImplementation('org.springframework.boot:spring-boot-starter-test')
+	testImplementation('org.springframework.batch:spring-batch-test')
+	testImplementation('org.springframework.boot:spring-boot-starter-data-jpa')
+}
