@@ -7,18 +7,18 @@ package org.softlab.codingtask.config;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import org.springframework.batch.core.configuration.annotation.DefaultBatchConfigurer;
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.jpa.JpaDialect;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
-
-public class DataSourceConfiguration {
-
-	@Autowired
-	public PlatformTransactionManager transactionManager;
+@Configuration
+@EnableBatchProcessing
+public class JPADataSourceConfiguration extends DefaultBatchConfigurer {
 
 	@Autowired
 	private EntityManagerFactory entityManagerFactory;
@@ -26,9 +26,8 @@ public class DataSourceConfiguration {
 	@Autowired
 	private DataSource dataSource;
 
-	@Bean(name = "jpaTransactionManager")
-	@Primary
-	public PlatformTransactionManager transactionManager() {
+	@Override
+	public PlatformTransactionManager getTransactionManager() {
 		JpaTransactionManager transactionManager = new JpaTransactionManager();
 		transactionManager.setEntityManagerFactory(entityManagerFactory);
 		transactionManager.setDataSource(dataSource);

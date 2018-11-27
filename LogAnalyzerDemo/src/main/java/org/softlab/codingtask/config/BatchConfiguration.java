@@ -14,7 +14,6 @@ import org.softlab.codingtask.model.JsonLogEvent;
 import org.softlab.codingtask.model.LogEvent;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
@@ -26,15 +25,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@EnableBatchProcessing
 @SpringBootConfiguration
-// @Import(DataSourceConfiguration.class)
+@Import(JPADataSourceConfiguration.class)
 public class BatchConfiguration {
 
 	private static final Logger log = LoggerFactory.getLogger(BatchConfiguration.class);
