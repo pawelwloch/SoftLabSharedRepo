@@ -2,7 +2,7 @@
  * @author Paweł Włoch ©SoftLab
  * @date 21 lis 2018
  */
-package org.softlab.codingtask.test;
+package org.softlab.codingtask.config;
 
 import java.net.MalformedURLException;
 

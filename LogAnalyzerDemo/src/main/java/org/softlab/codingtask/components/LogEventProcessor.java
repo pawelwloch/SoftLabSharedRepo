@@ -19,7 +19,9 @@ import org.slf4j.LoggerFactory;
 import org.softlab.codingtask.model.JsonLogEvent;
 import org.softlab.codingtask.model.LogEvent;
 import org.springframework.batch.item.ItemProcessor;
+import org.springframework.stereotype.Component;
 
+@Component
 public class LogEventProcessor implements ItemProcessor<JsonLogEvent, LogEvent> {
 	
 	private static final Logger log = LoggerFactory.getLogger(LogEventProcessor.class);
@@ -73,7 +75,7 @@ public class LogEventProcessor implements ItemProcessor<JsonLogEvent, LogEvent> 
 			long duration = Math.abs(logItem.getTimestamp() - logItem2.getTimestamp());
 			boolean alarm = duration > 4l ? true : false;
 			LogEvent logEvent = new LogEvent(logItem.getId(), duration, logItem.getType(), logItem.getHost(), alarm);
-			log.info("Created a new log event obj: {" + logEvent.toString() + "}");	// with id=" + logEvent.getEventId() + ", duration=" + logEvent.getDuration());
+			log.info("Created a new log event obj: {" + logEvent.toString() + "}");
 			return logEvent; 			
 		}
 		//keep first information about an event with this id in the map

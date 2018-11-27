@@ -9,7 +9,6 @@ import javax.persistence.EntityManagerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.softlab.codingtask.components.JobCompletionNotificationListener;
-import org.softlab.codingtask.components.LogEventProcessor;
 import org.softlab.codingtask.model.JsonLogEvent;
 import org.softlab.codingtask.model.LogEvent;
 import org.springframework.batch.core.Job;
@@ -17,6 +16,7 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.json.JacksonJsonObjectReader;
 import org.springframework.batch.item.json.JsonItemReader;
@@ -53,6 +53,9 @@ public class BatchConfiguration {
 	@Autowired
 	public StepBuilderFactory stepBuilderFactory;
 
+	@Autowired
+	public ItemProcessor<JsonLogEvent, LogEvent> logEventProcessor;
+
 	@Bean
     public JsonItemReader<JsonLogEvent> jsonItemReader() {
        ObjectMapper objectMapper = new ObjectMapper();
@@ -68,11 +71,6 @@ public class BatchConfiguration {
                      .build();
     }
     
-    @Bean
-    public LogEventProcessor processor() {
-        return new LogEventProcessor();
-    }
-
     @Bean
     public JpaItemWriter<LogEvent> writer() {
     	JpaItemWriter<LogEvent> writer = new JpaItemWriter<>();
@@ -96,7 +94,7 @@ public class BatchConfiguration {
 				.transactionManager(transactionManager)
 				.<JsonLogEvent, LogEvent>chunk(1)
             .reader(jsonItemReader())
-            .processor(processor())
+				.processor(logEventProcessor)
             .writer(writer)
             .build();
     }

@@ -30,7 +30,7 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 			log.info("!JOB FINISHED! EOF input file.");
 
 			List<LogEvent> findAll = logEventRepository.findAll();
-			findAll.forEach(event -> log.info("object in the database: " + event.toString()));
+			findAll.forEach(event -> log.debug("object in the database: " + event.toString()));
 		}
 	}
 }
