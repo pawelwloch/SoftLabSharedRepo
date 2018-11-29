@@ -1,0 +1,22 @@
+{
+"customer":		["required", {"one_of" : ["PLUTO1", "PLUTO2"]}],
+"ccyPair":		["required", "iso_currency_pair"],
+"type": 		["required", {"one_of" : ["Spot", "Forward", "VanillaOption"]}],
+"direction": 	["required", {"one_of":["BUY", "SELL"]}],
+"tradeDate": 	["required","iso_date"],
+"amount1": 		["required", "decimal"],
+"amount2": 		["required", "decimal"],
+"valueDate": 	["iso_date", "weekday", {"equal_or_later_then":"tradeDate"}],
+"rate": 		["required", "decimal"],
+"legalEntity": 	["required", {"eq":"Warsaw"}],
+"trader": 		["required", {"like" : "^[a-zA-Z ]+$"}],
+"style": 		{"one_of" : ["AMERICAN", "EUROPEAN"]},
+"strategy": 	{"eq": "CALL"},
+"deliveryDate": ["iso_date"],
+"expiryDate": 	["iso_date", {"before":"deliveryDate"}],
+"excerciseStartDate": ["iso_date", {"before":"expiryDate"}, {"after":"tradeDate"}],
+"premiumDate": 	["iso_date", {"before":"deliveryDate"}],
+"payCcy":		["iso_currency"],
+"premium": 		["decimal"], 
+"premiumCcy": 	["iso_currency"]
+}
