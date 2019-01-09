@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.softlab.codingtask.model.JsonLogEvent;
@@ -54,8 +53,9 @@ public class LogAnalyzerApplicationTests {
 
 	private List<JsonLogEvent> inLogEvents = new ArrayList<>();
 
+	@Autowired
 	public StepExecution getStepExection() {
-		StepExecution execution = MetaDataInstanceFactory.createStepExecution();
+		StepExecution execution = MetaDataInstanceFactory.createStepExecution("readProcessAndWrite", 1l);
 		execution.getExecutionContext().putString("test_data.json", "some context");
 		return execution;
 	}
@@ -82,7 +82,6 @@ public class LogAnalyzerApplicationTests {
 	}
 
 	@Test
-	@Ignore
 	public void jsonReaderTest() throws UnexpectedInputException, ParseException, Exception {
 		// przepuść 1-elementowy stream przez readera
 		// {"id":"scsmbstgra", "state":"STARTED",

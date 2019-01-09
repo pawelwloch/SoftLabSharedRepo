@@ -79,18 +79,18 @@ public class BatchConfiguration {
     }
     
     @Bean
-    public Job importUserJob(JobCompletionNotificationListener listener, Step step1) {
-        return jobBuilderFactory.get("importUserJob")
+	public Job importAndAnalizeLogs(JobCompletionNotificationListener listener, Step readProcessAndWrite) {
+		return jobBuilderFactory.get("importAndAnalizeLogs")
             .incrementer(new RunIdIncrementer())
             .listener(listener)
-            .flow(step1)
+				.flow(readProcessAndWrite)
             .end()
             .build();
     }
     
     @Bean
-    public Step step1(JpaItemWriter<LogEvent> writer) {
-        return stepBuilderFactory.get("step1")
+	public Step readProcessAndWrite(JpaItemWriter<LogEvent> writer) {
+		return stepBuilderFactory.get("readProcessAndWrite")
 				.transactionManager(transactionManager)
 				.<JsonLogEvent, LogEvent>chunk(1)
             .reader(jsonItemReader())
