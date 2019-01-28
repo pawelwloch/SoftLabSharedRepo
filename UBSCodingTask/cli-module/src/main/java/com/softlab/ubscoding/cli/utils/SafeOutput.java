@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class SafeOutput {
 
 	public void printToConsole(String s) {
-		synchronized (System.out) {
+		synchronized (this) {
 			System.out.println(s);
 		}
 	}

@@ -12,7 +12,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.softlab.ubscoding.cli.menu.MenuManager;
-import com.softlab.ubscoding.cli.websocket.WebSocketServer;
+import com.softlab.ubscoding.cli.websocket.CLIWebSocketClient;
 
 @SpringBootApplication
 public class CLIApplication implements CommandLineRunner {
@@ -23,7 +23,7 @@ public class CLIApplication implements CommandLineRunner {
 	private MenuManager menuManager;
 
 	@Autowired
-	private WebSocketServer wss;
+	private CLIWebSocketClient wsc;
 
 	public static void main(String[] args) {
 		LOG.info("STARTING THE APPLICATION");
@@ -39,8 +39,7 @@ public class CLIApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		LOG.info("EXECUTING : command line runner");
-		// start server in separate thread
-		wss.run();
+		wsc.connect();
 		menuManager.showAndExecuteMenuItems();
 	}
 

@@ -54,7 +54,17 @@ public class CLIMenuManager implements MenuManager {
 
 		while (true) {
 			displayMenu();
-			int choice = scan.nextInt();
+			int choice = 0;
+			boolean exception;
+			do {
+				exception = false;
+				try {
+					choice = scan.nextInt();
+				} catch (Exception e) {
+					exception = true;
+				}
+			} while (exception);
+
 			// 0th element is a header
 			if (choice < 1 || choice >= menu.size()) {
 				safeOut.printToConsole("Please enter matching number.");
