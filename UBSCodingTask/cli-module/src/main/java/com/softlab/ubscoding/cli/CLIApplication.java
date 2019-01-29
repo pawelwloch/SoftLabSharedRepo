@@ -6,41 +6,35 @@ package com.softlab.ubscoding.cli;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
 
 import com.softlab.ubscoding.cli.menu.MenuManager;
 import com.softlab.ubscoding.cli.websocket.CLIWebSocketClient;
 
 @SpringBootApplication
-public class CLIApplication implements CommandLineRunner {
+public class CLIApplication {
 
 	private static Logger LOG = LoggerFactory.getLogger(CLIApplication.class);
 
-	@Autowired
-	private MenuManager menuManager;
-
-	@Autowired
-	private CLIWebSocketClient wsc;
+	@Bean
+	public RestTemplate restTemplate(RestTemplateBuilder builder) {
+		return builder.build();
+	}
 
 	public static void main(String[] args) {
 		LOG.info("STARTING THE APPLICATION");
-		SpringApplication.run(CLIApplication.class, args);
-		LOG.info("APPLICATION FINISHED");
-	}
+		ConfigurableApplicationContext context = SpringApplication.run(CLIApplication.class, args);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.springframework.boot.CommandLineRunner#run(java.lang.String[])
-	 */
-	@Override
-	public void run(String... args) throws Exception {
-		LOG.info("EXECUTING : command line runner");
+		CLIWebSocketClient wsc = context.getBean(CLIWebSocketClient.class);
 		wsc.connect();
-		menuManager.showAndExecuteMenuItems();
+
+		MenuManager manager = context.getBean(MenuManager.class);
+		manager.showAndExecuteMenuItems();
 	}
 
 }

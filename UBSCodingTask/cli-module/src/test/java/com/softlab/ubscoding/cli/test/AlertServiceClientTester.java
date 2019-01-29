@@ -6,6 +6,7 @@ package com.softlab.ubscoding.cli.test;
 
 import static org.springframework.test.web.client.ExpectedCount.once;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 import java.math.BigDecimal;
 
@@ -15,30 +16,30 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.client.MockRestServiceServer;
-import org.springframework.test.web.client.response.MockRestResponseCreators;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.client.support.RestGatewaySupport;
 
 import com.softlab.ubscoding.cli.rest.AlertServiceComponent;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@AutoConfigureWebClient
-@TestPropertySource("classpath:application-test.properties")
+@SpringBootTest
+@TestPropertySource(locations = "classpath:application-test.properties")
 public class AlertServiceClientTester {
 
 	@Configuration
 	@ComponentScan(basePackages = "com.softlab.ubscoding.cli.rest")
-	static class Config {
+	public static class RestConfig {
+		@Bean
+		public RestTemplate getRestTemplate() {
+			return new RestTemplate();
+		}
 	}
 
 	private final static String LIMIT_QUERY = "/alert?pair={pair}&limit={limit}";
@@ -51,11 +52,12 @@ public class AlertServiceClientTester {
 	private String servletContextPath;
 
 	@LocalServerPort
-	private String port;
+	private int port;
 
 	@Autowired
 	private AlertServiceComponent service;
 
+	@Autowired
 	private RestTemplate restTemplate;
 
 	private MockRestServiceServer mockServer;
@@ -63,28 +65,24 @@ public class AlertServiceClientTester {
 
 	@Before
 	public void setUp() {
-		URL = "http://" + serverAddress + ":" + port + servletContextPath;
-		restTemplate = new RestTemplate();
-		RestGatewaySupport gateway = new RestGatewaySupport();
-		gateway.setRestTemplate(restTemplate);
-		mockServer = MockRestServiceServer.createServer(gateway);
+		mockServer = MockRestServiceServer.bindTo(restTemplate).build();
 	}
 
-	@Ignore // still don't know how to make Spring to substitute {port} with something else then 0???
+	@Ignore
 	@Test
 	public void shouldReturnHttp200OnSetLimit() {
-		mockServer.expect(once(), requestTo(URL + LIMIT_QUERY))
-				.andRespond(MockRestResponseCreators.withStatus(org.springframework.http.HttpStatus.OK));
+		URL = "http://" + serverAddress + ":" + port + servletContextPath;
+		mockServer.expect(once(), requestTo(LIMIT_QUERY)).andRespond(withSuccess());
 
 		service.putAlert("UBS/UBS", new BigDecimal(100));
 		mockServer.verify();
 	}
 
-	@Ignore // still don't know how to make Spring to substitute {port} with something else then 0???
+	@Ignore
 	@Test
 	public void shouldReturnHttp200OnDeleteLimit() {
-		mockServer.expect(once(), requestTo(URL + DELETE_QUERY))
-				.andRespond(MockRestResponseCreators.withStatus(org.springframework.http.HttpStatus.OK));
+		URL = "http://" + serverAddress + ":" + port + servletContextPath;
+		mockServer.expect(once(), requestTo(DELETE_QUERY)).andRespond(withSuccess());
 
 		service.deleteAlert("UBS/UBS");
 		mockServer.verify();

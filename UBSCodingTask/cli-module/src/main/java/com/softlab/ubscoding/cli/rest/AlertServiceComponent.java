@@ -10,8 +10,8 @@ import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -22,6 +22,7 @@ public class AlertServiceComponent implements AlertServiceClient {
 
 	private String URL;
 
+	@Autowired
 	private RestTemplate restTemplate;
 
 	private final static String LIMIT_QUERY = "/alert?pair={pair}&limit={limit}";
@@ -36,10 +37,6 @@ public class AlertServiceComponent implements AlertServiceClient {
 	@Value("${server.port}")
 	private String port;
 
-	public AlertServiceComponent(RestTemplateBuilder restTemplateBuilder) {
-		this.restTemplate = restTemplateBuilder.build();
-	}
-
 	@PostConstruct
 	public void init() {
 		URL = "http://" + serverAddress + ":" + port + servletContextPath;
@@ -53,6 +50,5 @@ public class AlertServiceComponent implements AlertServiceClient {
 	@Override
 	public void deleteAlert(String currencyPair) {
 		restTemplate.delete(URL + DELETE_QUERY, currencyPair);
-
 	}
 }
