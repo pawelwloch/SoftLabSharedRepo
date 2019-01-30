@@ -4,8 +4,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<name>UBSCodingTask</name>
-	<description>Bitcoin monitoring service - parent module</description>
+	<name>BitcoinMonitor</name>
+	<description>Bitcoin monitoring service - parent module. This application was made as a UBS recrutiment task.</description>
 
 	<groupId>org.softlab</groupId>
 	<artifactId>ubscodingtask</artifactId>
