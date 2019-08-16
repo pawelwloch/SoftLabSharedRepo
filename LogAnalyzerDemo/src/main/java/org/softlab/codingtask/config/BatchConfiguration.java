@@ -40,16 +40,16 @@ public class BatchConfiguration {
 
 	@Value("${logInputFile}")
 	private String pathToInputLogDataJsonFile;
-	
+
 	@Autowired
 	public PlatformTransactionManager transactionManager;
 
 	@Autowired
 	private EntityManagerFactory entityManagerFactory;
-	
+
 	@Autowired
 	public JobBuilderFactory jobBuilderFactory;
-	
+
 	@Autowired
 	public StepBuilderFactory stepBuilderFactory;
 
@@ -57,46 +57,35 @@ public class BatchConfiguration {
 	public ItemProcessor<JsonLogEvent, LogEvent> logEventProcessor;
 
 	@Bean
-    public JsonItemReader<JsonLogEvent> jsonItemReader() {
-       ObjectMapper objectMapper = new ObjectMapper();
-       objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-       objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
-       JacksonJsonObjectReader<JsonLogEvent> jsonObjectReader = new JacksonJsonObjectReader<>(JsonLogEvent.class);
-       jsonObjectReader.setMapper(objectMapper);
+	public JsonItemReader<JsonLogEvent> jsonItemReader() {
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
+		JacksonJsonObjectReader<JsonLogEvent> jsonObjectReader = new JacksonJsonObjectReader<>(JsonLogEvent.class);
+		jsonObjectReader.setMapper(objectMapper);
 
-       return new JsonItemReaderBuilder<JsonLogEvent>()
-                     .jsonObjectReader(jsonObjectReader)
-                     .resource(new FileSystemResource(pathToInputLogDataJsonFile))
-                     .name("logEventJsonItemReader")
-                     .build();
-    }
-    
-    @Bean
-    public JpaItemWriter<LogEvent> writer() {
-    	JpaItemWriter<LogEvent> writer = new JpaItemWriter<>();
-    	writer.setEntityManagerFactory(entityManagerFactory);
-    	return writer;
-    }
-    
-    @Bean
+		return new JsonItemReaderBuilder<JsonLogEvent>().jsonObjectReader(jsonObjectReader)
+				.resource(new FileSystemResource(pathToInputLogDataJsonFile)).name("logEventJsonItemReader").build();
+	}
+
+	@Bean
+	public JpaItemWriter<LogEvent> writer() {
+		JpaItemWriter<LogEvent> writer = new JpaItemWriter<>();
+		writer.setEntityManagerFactory(entityManagerFactory);
+		return writer;
+	}
+
+	@Bean
 	public Job importAndAnalizeLogs(JobCompletionNotificationListener listener, Step readProcessAndWrite) {
-		return jobBuilderFactory.get("importAndAnalizeLogs")
-            .incrementer(new RunIdIncrementer())
-            .listener(listener)
-				.flow(readProcessAndWrite)
-            .end()
-            .build();
-    }
-    
-    @Bean
+		return jobBuilderFactory.get("importAndAnalizeLogs").incrementer(new RunIdIncrementer()).listener(listener)
+				.flow(readProcessAndWrite).end().build();
+	}
+
+	@Bean
 	public Step readProcessAndWrite(JpaItemWriter<LogEvent> writer) {
-		return stepBuilderFactory.get("readProcessAndWrite")
-				.transactionManager(transactionManager)
-				.<JsonLogEvent, LogEvent>chunk(1)
-            .reader(jsonItemReader())
-				.processor(logEventProcessor)
-            .writer(writer)
-            .build();
-    }
+		return stepBuilderFactory.get("readProcessAndWrite").transactionManager(transactionManager)
+				.<JsonLogEvent, LogEvent>chunk(1).reader(jsonItemReader()).processor(logEventProcessor).writer(writer)
+				.build();
+	}
 
 }

@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '2.1.0.RELEASE'
+		springBootVersion = '2.1.7.RELEASE'
 	}
 	repositories {
 		mavenCentral()
@@ -8,14 +8,14 @@ buildscript {
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 		classpath("javax.validation:validation-api:2.0.1.Final")
-		classpath("org.glassfish:javax.el:3.0.1-b09")
+		classpath("org.glassfish:javax.el:3.0.1-b11")
 		classpath("org.hibernate.validator:hibernate-validator:6.0.13.Final")
-		classpath("org.hibernate.validator:hibernate-validator-annotation-processor:6.0.13.Final")
+		classpath("org.hibernate.validator:hibernate-validator-annotation-processor:6.0.17.Final")
 	}
 }
 
 plugins {
-    id 'io.franzbecker.gradle-lombok' version '1.14'
+    id 'io.franzbecker.gradle-lombok' version '3.0.0'
 }
 
 apply plugin: 'io.franzbecker.gradle-lombok'
@@ -25,7 +25,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 group = 'org.softlab'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.2-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
@@ -33,7 +33,7 @@ repositories {
 }
 
 lombok {
-	version = '1.18.4'
+	version = '1.18.8'
 	sha256 = ""
 }
 
@@ -42,7 +42,7 @@ dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-data-jpa')
 	implementation('org.springframework.boot:spring-boot-starter-validation')
 	compile('org.hsqldb:hsqldb')
-	compileOnly('org.projectlombok:lombok:1.18.4')
+	compileOnly('org.projectlombok:lombok:1.18.8')
 	compile "org.springframework.boot:spring-boot-configuration-processor"
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 	testImplementation('org.springframework.batch:spring-batch-test')

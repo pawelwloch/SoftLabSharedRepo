@@ -4,6 +4,8 @@
  */
 package org.softlab.codingtask.model;
 
+import java.util.Objects;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
@@ -28,7 +30,7 @@ public class JsonLogEvent {
 	private String id;		// the unique event identifier
 
 	@Pattern(regexp="(^STARTED$|^FINISHED$)", message="missing or wrong state value")
-	private String state;		// whether the event was started or finished 
+	private String state; // describes whether an event was started or finished
 
 	@NotNull(message="missing timestamp") 
 	@Positive(message="timestamp must be positive value")
@@ -37,4 +39,23 @@ public class JsonLogEvent {
 	private String type;		// type of log
 	
 	private String host;		// hostname
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(host, id, state, timestamp, type);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		JsonLogEvent other = (JsonLogEvent) obj;
+		return Objects.equals(host, other.host) && Objects.equals(id, other.id) && Objects.equals(state, other.state)
+				&& Objects.equals(timestamp, other.timestamp) && Objects.equals(type, other.type);
+	}
+
 }

@@ -28,7 +28,7 @@ public class LogEventProcessor implements ItemProcessor<JsonLogEvent, LogEvent> 
 
 	private Validator validator;
 	
-	//objects are held in the map until matching record is read
+	// objects are held in the map UNTIL matching record is read
 	private Map<String, JsonLogEvent> eventsMap = new HashMap<>();
 	
 	@PostConstruct

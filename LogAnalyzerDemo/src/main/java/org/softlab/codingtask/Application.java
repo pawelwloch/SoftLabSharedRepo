@@ -12,7 +12,7 @@ public class Application {
 
 	public static void main(String[] args) throws Exception {
 		if(args.length != 1) {
-			System.out.println("Pass the path to the input file as parameter.");
+			System.out.println("Please provide the path to the input file as an input parameter 'logInputFile'.");
 		} else { 
 			SpringApplication.run(Application.class, args);
 		}
