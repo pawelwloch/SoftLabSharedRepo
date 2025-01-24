@@ -1,2 +1,2 @@
 # SoftLabSharedRepo
-public repo containing some sample projects
+public repo containing some projects written as recruitment tasks
